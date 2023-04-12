@@ -3,6 +3,7 @@ import logging
 from linkedin_api.cookie_repository import CookieRepository
 from bs4 import BeautifulSoup
 import json
+import lxml
 
 logger = logging.getLogger(__name__)
 
