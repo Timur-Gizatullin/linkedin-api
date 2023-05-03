@@ -229,6 +229,8 @@ class Linkedin(object):
             )
             data = res.json()
 
+            logger.debug(data)
+
             new_elements = []
             elements = data.get("data", {}).get("elements", [])
 
@@ -361,6 +363,8 @@ class Linkedin(object):
             params["keywords"] = keywords
 
         data = self.search(params, **kwargs)
+
+        logger.debug(data)
 
         results = []
         for item in data:
