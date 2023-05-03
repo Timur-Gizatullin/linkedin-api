@@ -1147,6 +1147,8 @@ class Linkedin(object):
             headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
         )
 
+        logger.debug(res)
+
         return res.status_code != 201
 
     def remove_connection(self, public_profile_id):
