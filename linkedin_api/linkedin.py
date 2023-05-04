@@ -1151,7 +1151,7 @@ class Linkedin(object):
             headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
         )
 
-        logger.debug(res)
+        logger.debug(res.text)
 
         return res.status_code != 201
 
