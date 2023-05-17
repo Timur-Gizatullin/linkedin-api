@@ -1149,7 +1149,7 @@ class Linkedin(object):
 
         logger.debug(res.text)
 
-        logger.debug(res.headers)
+        logger.debug(dict(res.headers))
 
         return res.status_code != 201
 
