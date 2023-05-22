@@ -1161,7 +1161,7 @@ class Linkedin(object):
         res = self._fetch(
             f"/relationships/sentInvitationViewsV2?count={count}&invitationType=CONNECTION&q=invitationType&start={start}")
         data = res.json()["elements"]
-        pending_invitation_uris = [p["entityUrn"].split(":")[-1] for p in data]
+        pending_invitation_uris = [p["miniProfile"]["entityUrn"].split(":")[-1] for p in data]
 
         ## Each of these URIs can be passed to withdraw_sent_invitation to withdraw request
         return pending_invitation_uris
