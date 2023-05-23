@@ -1151,7 +1151,7 @@ class Linkedin(object):
 
         logger.debug(dict(res.headers))
 
-        return res.status_code != 201
+        return res.status_code
 
     def get_pending_sent_invitations(self, start, count):
         """
