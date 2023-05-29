@@ -219,12 +219,12 @@ class Linkedin(object):
                 "origin": "GLOBAL_SEARCH_HEADER",
                 "q": "all",
                 "start": len(results) + offset,
-                "queryContext": "List(spellCorrectionEnabled->true,relatedSearchesEnabled->true,kcardTypes->PROFILE|COMPANY)",
+                "queryParameters": "List(spellCorrectionEnabled->true,relatedSearchesEnabled->true,kcardTypes->PROFILE|COMPANY)",
             }
             default_params.update(params)
 
             res = self._fetch(
-                f"/graphql?{urlencode(default_params, safe='(),')}",
+                f"/graphql?variables=({urlencode(default_params, safe='(),')})",
                 headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
             )
             data = res.json()
