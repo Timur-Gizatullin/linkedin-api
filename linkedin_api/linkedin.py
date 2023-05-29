@@ -227,7 +227,7 @@ class Linkedin(object):
                 f"/graphql?variables=({urlencode(default_params, safe='(),')})",
                 headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
             )
-            print(data)
+            print(res)
             data = res.json()
 
             new_elements = []
