@@ -219,15 +219,14 @@ class Linkedin(object):
                 "origin": "GLOBAL_SEARCH_HEADER",
                 "q": "all",
                 "start": len(results) + offset,
-                "queryParameters": "List(spellCorrectionEnabled->true,relatedSearchesEnabled->true,kcardTypes->PROFILE|COMPANY)",
+                "queryContext": "List(spellCorrectionEnabled->true,relatedSearchesEnabled->true,kcardTypes->PROFILE|COMPANY)",
             }
             default_params.update(params)
 
             res = self._fetch(
-                f"/graphql?variables=({urlencode(default_params, safe='(),')})",
+                f"/search/blended?{urlencode(default_params, safe='(),')}",
                 headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
             )
-            print(res)
             data = res.json()
 
             new_elements = []
