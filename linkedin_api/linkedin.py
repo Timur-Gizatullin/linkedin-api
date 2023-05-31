@@ -224,7 +224,7 @@ class Linkedin(object):
             default_params.update(params)
 
             res = self._fetch(
-                f"/graphql?{urlencode(default_params, safe='(),')}",
+                f"/search?{urlencode(default_params, safe='(),')}",
                 headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
             )
 
@@ -357,7 +357,7 @@ class Linkedin(object):
         if keyword_school:
             filters.append(f"school->{keyword_school}")
 
-        params = {"variables": "List({})".format(",".join(filters))}
+        params = {"filters": "List({})".format(",".join(filters))}
 
         if keywords:
             params["keywords"] = keywords
