@@ -224,9 +224,10 @@ class Linkedin(object):
             default_params.update(params)
 
             res = self._fetch(
-                f"graphql?variables=(query:(keywords:Sales,flagshipSearchIntent:SEARCH_SRP,queryParameters:List((key:geoUrn,value:List(106204383)),(key:resultType,value:List(PEOPLE)))))",
+                f"/graphql?variables=(query: {default_params})",
                 headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
             )
+            print(res)
             data = res.json()
 
             new_elements = []
