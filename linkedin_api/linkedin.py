@@ -224,7 +224,7 @@ class Linkedin(object):
             default_params.update(params)
 
             res = self._fetch(
-                f"/graphql?variables=(query: {default_params})",
+                f"/graphql?variables=(query:{urlencode(default_params)})",
                 headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
             )
             print(res)
