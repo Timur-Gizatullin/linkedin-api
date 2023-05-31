@@ -214,21 +214,20 @@ class Linkedin(object):
             if limit > -1 and limit - len(results) < count:
                 count = limit - len(results)
             default_params = {
-                "count": str(count),
-                "filters": "List()",
-                "origin": "GLOBAL_SEARCH_HEADER",
-                "q": "all",
+                # "count": str(count),
+                # "filters": "List()",
+                # "origin": "GLOBAL_SEARCH_HEADER",
+                # "q": "all",
                 "start": len(results) + offset,
-                "queryContext": "List(spellCorrectionEnabled->true,relatedSearchesEnabled->true,kcardTypes->PROFILE|COMPANY)",
+                "flagshipSearchIntent": "SEARCH_SRP",
+                # "queryParameters": "List(spellCorrectionEnabled->true,relatedSearchesEnabled->true,kcardTypes->PROFILE|COMPANY)",
             }
             default_params.update(params)
 
             res = self._fetch(
-                f"/search?{urlencode(default_params, safe='(),')}",
+                f"/graphql?variables={urlencode({'query':default_params}, safe='(),')}",
                 headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
             )
-
-            print(res.text)
             data = res.json()
 
             new_elements = []
@@ -357,7 +356,7 @@ class Linkedin(object):
         if keyword_school:
             filters.append(f"school->{keyword_school}")
 
-        params = {"filters": "List({})".format(",".join(filters))}
+        params = {"queryParameters": "List({})".format(",".join(filters))}
 
         if keywords:
             params["keywords"] = keywords
