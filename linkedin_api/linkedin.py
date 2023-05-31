@@ -224,10 +224,11 @@ class Linkedin(object):
             default_params.update(params)
 
             res = self._fetch(
-                f"/graphql?variables=(query:{urlencode(default_params)})",
+                f"/search/blended?{urlencode(default_params, safe='(),')}",
                 headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
             )
-            print(res)
+
+            print(res.text)
             data = res.json()
 
             new_elements = []
