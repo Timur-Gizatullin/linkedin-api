@@ -230,6 +230,7 @@ class Linkedin(object):
                 f".762ab3bcd12981f5ebd753a9a2c36ff0",
                 headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
             )
+            print(res.text)
             data = res.json()
 
             new_elements = []
