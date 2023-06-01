@@ -222,11 +222,11 @@ class Linkedin(object):
                 "queryContext": "List(spellCorrectionEnabled->true,relatedSearchesEnabled->true,kcardTypes->PROFILE|COMPANY)",
             }
             default_params.update(params)
+
             print(default_params)
+
             res = self._fetch(
-                f"/graphql?includeWebMetadata=false&variables=(query:(keywords:CTO,flagshipSearchIntent:SEARCH_SRP,"
-                f"queryParameters:List((key:resultType,value:List(PEOPLE))),"
-                f"queryContext={default_params['queryContext']}))",
+                f"/search/blended?{urlencode(default_params, safe='(),')}",
                 headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
             )
             print(res.text)
