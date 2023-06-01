@@ -226,7 +226,7 @@ class Linkedin(object):
             res = self._fetch(
                 f"/graphql?includeWebMetadata=false&variables=(query:(keywords:CTO,flagshipSearchIntent:SEARCH_SRP,"
                 f"queryParameters:List((key:resultType,value:List(PEOPLE)))))"
-                f"&=&queryId=voyagerSearchDashFilterClusters.762ab3bcd12981f5ebd753a9a2c36ff0",
+                f"&queryContext={default_params['queryContext']}",
                 headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
             )
             print(res.text)
