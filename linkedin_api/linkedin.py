@@ -224,10 +224,7 @@ class Linkedin(object):
             default_params.update(params)
 
             res = self._fetch(
-                f"graphql?variables=(query:(keywords:CTO,flagshipSearchIntent:SEARCH_SRP,"
-                f"queryParameters:List((key:geoUrn,value:List(103644278)),"
-                f"(key:resultType,value:List(PEOPLE)))))&=&queryId=voyagerSearchDashFilterClusters"
-                f".762ab3bcd12981f5ebd753a9a2c36ff0",
+                f"/search/blended?{urlencode(default_params, safe='(),')}",
                 headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
             )
             print(res.text)
