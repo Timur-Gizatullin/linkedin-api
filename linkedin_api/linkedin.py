@@ -1512,3 +1512,88 @@ class Linkedin(object):
             return {}
 
         return data
+
+    def graphql_search_people(
+            self,
+            job_title: str,
+            regions: list[str],
+            limit: int | None,
+            offset: int
+    ) -> list[dict]:
+        """Get list of user's urns by job_title and regions."""
+        count = Linkedin._MAX_SEARCH_COUNT
+        if limit is None:
+            limit = -1
+
+        results = []
+        while True:
+            # when we're close to the limit, only fetch what we need to
+            if limit > -1 and limit - len(results) < count:
+                count = limit - len(results)
+
+            default_params = {
+                "origin": "FACETED_SEARCH",
+                "start": len(results) + offset,
+            }
+
+            res = self._fetch(
+                (f"graphql?variables=(start:{default_params['start']},origin:{default_params['origin']},"
+                 f"query:(keywords:{job_title},flagshipSearchIntent:SEARCH_SRP,"
+                 f"queryParameters:List((key:geoUrn,value:List({','.join(regions)})),"
+                 f"(key:resultType,value:List(PEOPLE))),"
+                 f"includeFiltersInResponse:false))&=&queryId=voyagerSearchDashClusters"
+                 f".b0928897b71bd00a5a7291755dcd64f0"),
+                headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
+            )
+
+            logger.debug(res.text)
+            data = res.json()
+
+            new_elements = []
+            elements = data.get("included", [])
+            print(elements)
+
+            for i in range(0, 10):
+                new_elements.extend(elements[i]["entityUrn"])
+
+            results.extend(self._get_people_by_urns(urns=new_elements))
+
+            # break the loop if we're done searching
+            # NOTE: we could also check for the `total` returned in the response.
+            # This is in data["data"]["paging"]["total"]
+            if (
+                    (-1 < limit <= len(results))  # if our results exceed set limit
+                    or len(results) / count >= Linkedin._MAX_REPEATED_REQUESTS
+            ) or len(new_elements) == 0:
+                break
+
+            self.logger.debug(f"results grew to {len(results)}")
+
+        return results
+
+    def _get_people_by_urns(self, urns: list[str]) -> list[dict]:
+        """Get profiles info by urns."""
+        loaded_actions = []
+
+        for urn in urns:
+            loaded_actions.append(
+                (f"urn:li:fsd_lazyLoadedActions:(urn:li:fsd_profileActions:({urn},"
+                 "SEARCH,EMPTY_CONTEXT_ENTITY_URN),PEOPLE,SEARCH_SRP)"),
+            )
+
+        response = self._fetch(
+            f"/graphql?variables=(lazyLoadedActionsUrns:List({','.join(loaded_actions)}))",
+            headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
+        )
+
+        logger.debug(response.text)
+        data = response.json()
+
+        included_data = data.get("included", [])
+
+        profiles = []
+
+        for i in range(1, 11):
+            profiles.append(included_data[i])
+
+        return profiles
