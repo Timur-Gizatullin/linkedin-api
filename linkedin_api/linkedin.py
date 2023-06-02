@@ -1547,7 +1547,7 @@ class Linkedin(object):
             )
 
             logger.debug(res.text)
-            data = res.json()
+            data = json.loads(res.text)
 
             new_elements = []
             elements = data.get("included", [])
