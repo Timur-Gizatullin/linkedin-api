@@ -1584,7 +1584,7 @@ class Linkedin(object):
             )
 
         response = self._fetch(
-            f"/graphql?variables=(lazyLoadedActionsUrns:List({','.join(loaded_actions)})){query_id}",
+            f"/graphql?variables=(lazyLoadedActionsUrns:List({','.join(loaded_actions)}))",
             headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
         )
 
