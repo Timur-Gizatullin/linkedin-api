@@ -1537,7 +1537,7 @@ class Linkedin(object):
             }
 
             res = self._fetch(
-                (f"graphql?variables=(start:{default_params['start']},origin:{default_params['origin']},"
+                (f"/graphql?variables=(start:{default_params['start']},origin:{default_params['origin']},"
                  f"query:(keywords:{job_title},flagshipSearchIntent:SEARCH_SRP,"
                  f"queryParameters:List((key:geoUrn,value:List({','.join(regions)})),"
                  f"(key:resultType,value:List(PEOPLE))),"
