@@ -1587,7 +1587,7 @@ class Linkedin(object):
         )
 
         logger.debug(response.text)
-        data = response.json()
+        data = json.loads(response.text)
 
         included_data = data.get("included", [])
 
