@@ -1577,8 +1577,9 @@ class Linkedin(object):
         loaded_actions = []
 
         for urn in urns:
+            clear_urn = urn.split(":")[-1]
             loaded_actions.append(
-                (f"urn:li:fsd_lazyLoadedActions:(urn:li:fsd_profileActions:({urn},"
+                (f"urn:li:fsd_lazyLoadedActions:(urn:li:fsd_profileActions:({clear_urn},"
                  "SEARCH,EMPTY_CONTEXT_ENTITY_URN),PEOPLE,SEARCH_SRP)"),
             )
 
