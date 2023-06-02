@@ -1551,10 +1551,10 @@ class Linkedin(object):
 
             new_elements = []
             elements = data.get("included", [])
-            print(elements)
+            logger.debug(f"Profile urns: {elements}")
 
             for i in range(0, 10):
-                new_elements.extend(elements[i]["entityUrn"])
+                new_elements.append(elements[i]["entityUrn"])
 
             results.extend(self._get_people_by_urns(urns=new_elements))
 
