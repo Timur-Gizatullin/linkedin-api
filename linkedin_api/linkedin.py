@@ -1556,7 +1556,7 @@ class Linkedin(object):
             for i in range(0, 10):
                 new_elements.append(elements[i]["entityUrn"])
 
-            results.extend(self._get_people_by_urns(urns=["ACoAAAoo5f8BucNfeb3ctfwWwCfqi5oCMVdTOdI"]))
+            results.extend(self._get_people_by_urns(urns=new_elements))
 
             # break the loop if we're done searching
             # NOTE: we could also check for the `total` returned in the response.
