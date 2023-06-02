@@ -1573,6 +1573,7 @@ class Linkedin(object):
 
     def _get_people_by_urns(self, urns: list[str]) -> list[dict]:
         """Get profiles info by urns."""
+        query_id = "&=&queryId=voyagerSearchDashLazyLoadedActions.9efa2f2f5bd10c3bbbbab9885c3c0a60"
         loaded_actions = []
 
         for urn in urns:
@@ -1582,7 +1583,7 @@ class Linkedin(object):
             )
 
         response = self._fetch(
-            f"/graphql?variables=(lazyLoadedActionsUrns:List({','.join(loaded_actions)}))",
+            f"/graphql?variables=(lazyLoadedActionsUrns:List({','.join(loaded_actions)})){query_id}",
             headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
         )
 
