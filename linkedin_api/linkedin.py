@@ -1584,7 +1584,7 @@ class Linkedin(object):
             )
 
         response = self._fetch(
-            f"/graphql?variables=(lazyLoadedActionsUrns:List({','.join(loaded_actions)}))",
+            f"/graphql?variables=(lazyLoadedActionsUrns:List({','.join(loaded_actions)})){query_id}",
             headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
         )
 
@@ -1595,7 +1595,7 @@ class Linkedin(object):
 
         profiles = []
 
-        for i in range(1, 11):
-            profiles.append(included_data[i])
+        for profile in included_data:
+            profiles.append(profile)
 
         return profiles
