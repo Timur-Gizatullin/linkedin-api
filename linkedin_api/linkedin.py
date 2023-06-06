@@ -1573,29 +1573,10 @@ class Linkedin(object):
 
     def _get_people_by_urns(self, urns: list[str]) -> list[dict]:
         """Get profiles info by urns."""
-        query_id = "&=&queryId=voyagerSearchDashLazyLoadedActions.9efa2f2f5bd10c3bbbbab9885c3c0a60"
-        loaded_actions = []
+        profiles = []
 
         for urn in urns:
             clear_urn = urn.split(":")[-1]
-            loaded_actions.append(
-                (f"urn:li:fsd_lazyLoadedActions:(urn:li:fsd_profileActions:({clear_urn},"
-                 "SEARCH,EMPTY_CONTEXT_ENTITY_URN),PEOPLE,SEARCH_SRP)"),
-            )
-
-        response = self._fetch(
-            f"/graphql?variables=(lazyLoadedActionsUrns:List({','.join(loaded_actions)})){query_id}",
-            headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
-        )
-
-        logger.debug(response.text)
-        data = json.loads(response.text)
-
-        included_data = data.get("included", [])
-
-        profiles = []
-
-        for profile in included_data:
-            profiles.append(profile)
+            profiles.append(self.get_profile(urn_id=clear_urn))
 
         return profiles
