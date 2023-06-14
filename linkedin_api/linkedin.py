@@ -1105,7 +1105,7 @@ class Linkedin(object):
 
         return res.status_code == 200
 
-    def add_connection(self, profile_public_id, message="", profile_urn=None):
+    def add_connection(self, profile_public_id=None, message="", profile_urn=None):
         """Add a given profile id as a connection.
 
         :param profile_public_id: public ID of a LinkedIn profile
