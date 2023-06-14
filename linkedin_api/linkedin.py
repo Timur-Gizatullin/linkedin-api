@@ -1546,17 +1546,22 @@ class Linkedin(object):
                 headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
             )
 
-            logger.debug(res.text)
             data = json.loads(res.text)
 
             new_elements = []
             elements = data.get("included", [])
-            logger.debug(f"Profile urns: {elements}")
 
-            for i in range(0, 10):
-                new_elements.append(elements[i]["entityUrn"])
+            for element in elements:
+                if element.get("template", None) and element.get("template") == "UNIVERSAL":
+                    urn_id = element["entityUrn"].split("(")[-1].split(":")[-1].split(",")[0]
+                    element_dict = {
+                        "entity_urn": urn_id,
+                        "full_name": element["title"]["text"],
+                        "profile_url": element["navigationContext"]["url"]
+                    }
+                    new_elements.append(element_dict)
 
-            results.extend(self._get_people_by_urns(urns=new_elements))
+            results.extend(new_elements)
 
             # break the loop if we're done searching
             # NOTE: we could also check for the `total` returned in the response.
@@ -1571,40 +1576,26 @@ class Linkedin(object):
 
         return results
 
-    def _get_people_by_urns(self, urns: list[str]) -> list[dict]:
-        """Get profiles info by urns."""
-        query_id = "&&queryId=voyagerSearchDashLazyLoadedActions.9efa2f2f5bd10c3bbbbab9885c3c0a60"
-        loaded_actions = []
-        test = []
-
-        for urn in urns:
-            clear_urn = urn.split(":")[-1]
-            loaded_actions.append(
-                (f"urn:li:fsd_lazyLoadedActions:(urn:li:fsd_profileActions:({clear_urn},"
-                 "SEARCH_STATEFUL_COMPLIMENTARY,EMPTY_CONTEXT_ENTITY_URN),PEOPLE,SEARCH_SRP)"),
-            )
-            #urn%3Ali%3Afsd_lazyLoadedActions%3A%28urn%3Ali%3Afsd_profileActions%3A%28ACoAAA1RGjQBJxlj1HDVqTTQhx2GfatLfv2i3-Q%2CSEARCH_STATEFUL_COMPLIMENTARY%2CEMPTY_CONTEXT_ENTITY_URN%29%2CPEOPLE%2CSEARCH_SRP%29
-            test.append(f"urn%3Ali%3Afsd_lazyLoadedActions`%3A%28`urn%3Ali%3Afsd_profileActions%3A%28{clear_urn}%2CSEARCH_STATEFUL_COMPLIMENTARY%2CEMPTY_CONTEXT_ENTITY_URN%29%2CPEOPLE%2CSEARCH_SRP%29")
-
-        variables = {
-            "loaded_actions": f"(lazyLoadedActionsUrns:List(','.join(loaded_actions))",
-            "query_id": "queryId=voyagerSearchDashLazyLoadedActions.9efa2f2f5bd10c3bbbbab9885c3c0a60"
-        }
-            #(lazyLoadedActionsUrns:List({','.join(loaded_actions)})){query_id}
-        response = self._fetch(
-            f"/graphql?variables=(lazyLoadedActionsUrns:List({','.join(test)}))&&queryId=voyagerSearchDashLazyLoadedActions.9efa2f2f5bd10c3bbbbab9885c3c0a60",
-            headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
-            params=variables
-        )
-
-        logger.debug(response.text)
-        data = json.loads(response.text)
-
-        included_data = data.get("included", [])
-
-        profiles = []
-
-        for profile in included_data:
-            profiles.append(profile)
-
-        return profiles
+    # def _get_people_by_urns(self, urns: list[str]) -> list[dict]:
+    #     """Get profiles info by urns."""
+    #     query_id = "&&queryId=voyagerSearchDashLazyLoadedActions.9efa2f2f5bd10c3bbbbab9885c3c0a60"
+    #     loaded_actions = []
+    #
+    #     for urn in urns:
+    #         clear_urn = urn.split(":")[-1]
+    #         loaded_actions.append(f"urn%3Ali%3Afsd_lazyLoadedActions%3A%28urn%3Ali%3Afsd_profileActions%3A%28{clear_urn}%2CSEARCH_STATEFUL_COMPLIMENTARY%2CEMPTY_CONTEXT_ENTITY_URN%29%2CPEOPLE%2CSEARCH_SRP%29")
+    #
+    #     response = self._fetch(
+    #         f"/graphql?variables=(lazyLoadedActionsUrns:List({','.join(loaded_actions)})){query_id}",
+    #         headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
+    #     )
+    #
+    #     data = json.loads(response.text)
+    #     included_data = data.get("included", [])
+    #     profiles = []
+    #
+    #     for profile in included_data:
+    #         if profile.get("firstName", None):
+    #             profiles.append(profile)
+    #
+    #     return profiles
