@@ -1576,26 +1576,34 @@ class Linkedin(object):
 
         return results
 
-    # def _get_people_by_urns(self, urns: list[str]) -> list[dict]:
-    #     """Get profiles info by urns."""
-    #     query_id = "&&queryId=voyagerSearchDashLazyLoadedActions.9efa2f2f5bd10c3bbbbab9885c3c0a60"
-    #     loaded_actions = []
-    #
-    #     for urn in urns:
-    #         clear_urn = urn.split(":")[-1]
-    #         loaded_actions.append(f"urn%3Ali%3Afsd_lazyLoadedActions%3A%28urn%3Ali%3Afsd_profileActions%3A%28{clear_urn}%2CSEARCH_STATEFUL_COMPLIMENTARY%2CEMPTY_CONTEXT_ENTITY_URN%29%2CPEOPLE%2CSEARCH_SRP%29")
-    #
-    #     response = self._fetch(
-    #         f"/graphql?variables=(lazyLoadedActionsUrns:List({','.join(loaded_actions)})){query_id}",
-    #         headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
-    #     )
-    #
-    #     data = json.loads(response.text)
-    #     included_data = data.get("included", [])
-    #     profiles = []
-    #
-    #     for profile in included_data:
-    #         if profile.get("firstName", None):
-    #             profiles.append(profile)
-    #
-    #     return profiles
+    def get_profile_connections_by_current_user(self):
+        """Returns connections of current auth profile."""
+        params = {
+            "count": 40,
+            "q": "search",
+            "sortType": "RECENTLY_ADDED",
+            "start": 0
+        }
+
+        profiles = []
+
+        while True:
+            res = self._fetch(
+                f"/relationships/dash/connections?",
+                headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
+                params=params
+            )
+
+            data = json.loads(res.text)["included"]
+            profiles_count = len(data)
+
+            logger.debug(f"fetch {profiles_count} profiles")
+
+            profiles.extend(data)
+
+            if profiles_count < params["count"]:
+                break
+
+            params["start"] += 40
+
+        return profiles
