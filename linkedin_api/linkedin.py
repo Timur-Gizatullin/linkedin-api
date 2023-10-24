@@ -1518,7 +1518,8 @@ class Linkedin(object):
             job_title: str,
             regions: list[str],
             limit: int | None,
-            offset: int
+            offset: int,
+            ignore_urn_list: list[str]
     ) -> list[dict]:
         """Get list of user's urns by job_title and regions."""
         count = Linkedin._MAX_SEARCH_COUNT
@@ -1554,12 +1555,13 @@ class Linkedin(object):
             for element in elements:
                 if element.get("template", None) and element.get("template") == "UNIVERSAL":
                     urn_id = element["entityUrn"].split("(")[-1].split(":")[-1].split(",")[0]
-                    element_dict = {
-                        "entity_urn": urn_id,
-                        "full_name": element["title"]["text"],
-                        "profile_url": element["navigationContext"]["url"]
-                    }
-                    new_elements.append(element_dict)
+                    if urn_id not in ignore_urn_list:
+                        element_dict = {
+                            "entity_urn": urn_id,
+                            "full_name": element["title"]["text"],
+                            "profile_url": element["navigationContext"]["url"]
+                        }
+                        new_elements.append(element_dict)
 
             results.extend(new_elements)
 
