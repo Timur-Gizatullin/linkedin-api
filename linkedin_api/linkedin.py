@@ -1526,11 +1526,13 @@ class Linkedin(object):
         if limit is None:
             limit = -1
 
+        counter = 0
+
         results = []
         while True:
             # when we're close to the limit, only fetch what we need to
             if limit > -1 and limit - len(results) < count:
-                count = limit - len(results)
+                count = limit - counter
 
             default_params = {
                 "origin": "FACETED_SEARCH",
@@ -1562,6 +1564,7 @@ class Linkedin(object):
                             "profile_url": element["navigationContext"]["url"]
                         }
                         new_elements.append(element_dict)
+                        counter += 1
 
             results.extend(new_elements)
 
