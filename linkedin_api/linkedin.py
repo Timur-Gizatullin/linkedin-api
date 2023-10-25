@@ -1531,7 +1531,7 @@ class Linkedin(object):
         results = []
         while True:
             # when we're close to the limit, only fetch what we need to
-            if limit > -1 and limit - len(results) < count:
+            if limit > -1 and limit - counter < count:
                 count = limit - counter
 
             default_params = {
@@ -1572,8 +1572,8 @@ class Linkedin(object):
             # NOTE: we could also check for the `total` returned in the response.
             # This is in data["data"]["paging"]["total"]
             if (
-                    (-1 < limit <= len(results))  # if our results exceed set limit
-                    or len(results) / count >= Linkedin._MAX_REPEATED_REQUESTS
+                    (-1 < limit <= counter)  # if our results exceed set limit
+                    or counter / count >= Linkedin._MAX_REPEATED_REQUESTS
             ) or len(new_elements) == 0:
                 break
 
