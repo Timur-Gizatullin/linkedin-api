@@ -1560,7 +1560,6 @@ class Linkedin(object):
                 if element.get("template", None) and element.get("template") == "UNIVERSAL":
                     urn_id = element["entityUrn"].split("(")[-1].split(":")[-1].split(",")[0]
                     self.logger.info(f"API: {urn_id}")
-                    self.logger.info(ignore_urn_list)
                     if urn_id not in ignore_urn_list:
                         element_dict = {
                             "entity_urn": urn_id,
@@ -1578,10 +1577,10 @@ class Linkedin(object):
             if (
                     (-1 < limit <= len(results))  # if our results exceed set limit
                     or len(results) / count >= Linkedin._MAX_REPEATED_REQUESTS
-            ) or len(new_elements) == 0:
+            ):
                 break
 
-            self.logger.debug(f"results grew to {len(results)}")
+            self.logger.info(f"results grew to {len(results)}")
 
         return results
 
