@@ -1539,6 +1539,8 @@ class Linkedin(object):
                 "start": counter + offset,
             }
 
+            self.logger.info(f'start:{default_params["start"]}')
+
             res = self._fetch(
                 (f"/graphql?variables=(start:{default_params['start']},origin:{default_params['origin']},"
                  f"query:(keywords:{job_title},flagshipSearchIntent:SEARCH_SRP,"
@@ -1557,8 +1559,8 @@ class Linkedin(object):
             for element in elements:
                 if element.get("template", None) and element.get("template") == "UNIVERSAL":
                     urn_id = element["entityUrn"].split("(")[-1].split(":")[-1].split(",")[0]
-                    self.logger.debug(f"API: {urn_id}")
-                    self.logger.debug(ignore_urn_list)
+                    self.logger.info(f"API: {urn_id}")
+                    self.logger.info(ignore_urn_list)
                     if urn_id not in ignore_urn_list:
                         element_dict = {
                             "entity_urn": urn_id,
