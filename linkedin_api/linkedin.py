@@ -1536,7 +1536,7 @@ class Linkedin(object):
 
             default_params = {
                 "origin": "FACETED_SEARCH",
-                "start": len(results) + offset,
+                "start": counter + offset,
             }
 
             res = self._fetch(
