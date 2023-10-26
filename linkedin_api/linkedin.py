@@ -1557,8 +1557,8 @@ class Linkedin(object):
             for element in elements:
                 if element.get("template", None) and element.get("template") == "UNIVERSAL":
                     urn_id = element["entityUrn"].split("(")[-1].split(":")[-1].split(",")[0]
-                    self.logger(f"API: {urn_id}")
-                    self.logger(ignore_urn_list)
+                    self.logger.debug(f"API: {urn_id}")
+                    self.logger.debug(ignore_urn_list)
                     if urn_id not in ignore_urn_list:
                         element_dict = {
                             "entity_urn": urn_id,
