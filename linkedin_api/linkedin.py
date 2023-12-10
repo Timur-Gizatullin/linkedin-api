@@ -1150,9 +1150,9 @@ class Linkedin(object):
             headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
         )
 
-        logger.debug(res.text)
+        self.logger.debug(res.text)
 
-        logger.debug(dict(res.headers))
+        self.logger.debug(dict(res.headers))
 
         return res.status_code
 
@@ -1539,7 +1539,7 @@ class Linkedin(object):
                 "start": counter + offset,
             }
 
-            self.logger.info(f'start:{default_params["start"]}')
+            self.logger.debug(f'start:{default_params["start"]}')
 
             res = self._fetch(
                 (f"/graphql?variables=(start:{default_params['start']},origin:{default_params['origin']},"
@@ -1550,6 +1550,12 @@ class Linkedin(object):
                  f".b0928897b71bd00a5a7291755dcd64f0"),
                 headers={"accept": "application/vnd.linkedin.normalized+json+2.1"},
             )
+
+            self.logger.debug(f"response: {res.status_code}")
+
+            if res.status_code != 200:
+                self.logger.debug(res.text)
+                raise Exception("Impossible to send request")
 
             data = json.loads(res.text)
 
