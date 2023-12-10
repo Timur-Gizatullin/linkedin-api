@@ -1120,8 +1120,8 @@ class Linkedin(object):
         """
 
         # Validating message length (max size is 300 characters)
-        if len(message) > 300:
-            self.logger.info("Message too long. Max size is 300 characters")
+        if len(message) > 200:
+            self.logger.info("Message too long. Max size is 200 characters")
             return False
 
         if not profile_urn:
